@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f0f"/>
+      <stop offset="100%" style="stop-color:#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#0099ff"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="1024" rx="180" fill="url(#bg)"/>
+
+  <!-- Track path — dotted trail curving upward -->
+  <path d="M 180 720 Q 300 680 380 580 Q 460 480 520 400 Q 580 320 680 260 Q 740 230 820 210"
+        fill="none" stroke="url(#arrow)" stroke-width="14"
+        stroke-linecap="round" stroke-dasharray="0 36"
+        filter="url(#glow)"/>
+
+  <!-- Solid end of path -->
+  <path d="M 460 490 Q 520 400 580 320 Q 640 245 720 215"
+        fill="none" stroke="url(#accent)" stroke-width="14"
+        stroke-linecap="round"
+        filter="url(#glow)"/>
+
+  <!-- Arrow head at end -->
+  <polygon points="820,178 868,250 772,250"
+           fill="url(#accent)" filter="url(#glow)"
+           transform="rotate(-20, 820, 214)"/>
+
+  <!-- Origin dot (lead source) -->
+  <circle cx="180" cy="720" r="22" fill="#00d4ff" opacity="0.25"/>
+  <circle cx="180" cy="720" r="13" fill="#00d4ff" filter="url(#glow)"/>
+
+  <!-- Waypoint dots -->
+  <circle cx="380" cy="578" r="9" fill="#00d4ff" opacity="0.6"/>
+  <circle cx="520" cy="400" r="9" fill="#00d4ff" opacity="0.8"/>
+
+  <!-- Target circle at destination -->
+  <circle cx="820" cy="214" r="48" fill="none" stroke="#00d4ff" stroke-width="3" opacity="0.3"/>
+  <circle cx="820" cy="214" r="32" fill="none" stroke="#00d4ff" stroke-width="2" opacity="0.5"/>
+  <circle cx="820" cy="214" r="10" fill="#00d4ff" filter="url(#glow)"/>
+
+  <!-- Wordmark -->
+  <text x="512" y="870"
+        font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="124"
+        font-weight="700"
+        letter-spacing="-4"
+        fill="#ffffff"
+        text-anchor="middle">trakt</text>
+</svg>

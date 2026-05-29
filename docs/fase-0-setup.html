@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raio⚡ — Fase 0: Setup Meta App</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05050a;
+    --surface: #0c0c14;
+    --surface2: #111118;
+    --border: #1a1a28;
+    --border2: #222235;
+    --accent: #FF3C3C;
+    --accent2: #FF7A00;
+    --green: #00E5A0;
+    --blue: #3C8EFF;
+    --yellow: #FFD93D;
+    --text: #F0F0F8;
+    --muted: #5a5a7a;
+    --dim: #10101a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, .brand { font-family: 'Syne', sans-serif; }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(5,5,10,0.95);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .brand {
+    font-size: 22px; font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(135deg, #FF3C3C, #FF7A00);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .phase-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* LAYOUT */
+  .container { max-width: 780px; margin: 0 auto; padding: 60px 24px 120px; }
+
+  /* HEADER */
+  .header { margin-bottom: 48px; }
+  .phase-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,60,60,0.08);
+    border: 1px solid rgba(255,60,60,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: 40px; font-weight: 800; letter-spacing: -1.5px;
+    line-height: 1.1; margin-bottom: 16px;
+  }
+  .header h1 span {
+    background: linear-gradient(135deg, #FF3C3C, #FF7A00);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header p { font-size: 16px; color: var(--muted); max-width: 560px; }
+
+  /* PROGRESS */
+  .progress-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 40px;
+  }
+  .progress-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .progress-count { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+  .progress-count span { color: var(--green); }
+  .progress-bar-bg {
+    height: 6px; background: var(--border2); border-radius: 99px; overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FF3C3C, #FF7A00);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 16px; }
+
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .step.done { border-color: rgba(0,229,160,0.25); }
+  .step.active { border-color: rgba(255,122,0,0.3); }
+
+  .step-header {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .step-checkbox {
+    width: 22px; height: 22px; min-width: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border2);
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 2px;
+  }
+  .step-checkbox.checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .step-checkbox.checked::after {
+    content: '';
+    width: 12px; height: 8px;
+    border-left: 2.5px solid #05050a;
+    border-bottom: 2.5px solid #05050a;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  .step-main { flex: 1; }
+  .step-number {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
+  }
+  .step.done .step-title { color: var(--muted); text-decoration: line-through; }
+  .step-subtitle { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .step-toggle {
+    color: var(--muted); font-size: 18px;
+    transition: transform 0.2s; line-height: 1;
+    margin-top: 4px;
+  }
+  .step.open .step-toggle { transform: rotate(180deg); }
+
+  /* STEP BODY */
+  .step-body {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .step.open .step-body { display: block; }
+  .step-body > * + * { margin-top: 16px; }
+
+  /* INSTRUCTIONS */
+  .instruction-list { list-style: none; display: flex; flex-direction: column; gap: 10px; padding-top: 16px; }
+  .instruction-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px; line-height: 1.6;
+  }
+  .instruction-list li .dot {
+    width: 20px; height: 20px; min-width: 20px;
+    border-radius: 50%; background: rgba(255,122,0,0.12);
+    border: 1px solid rgba(255,122,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--accent2);
+    margin-top: 2px;
+  }
+
+  /* LINK BUTTON */
+  .link-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(60,142,255,0.1);
+    border: 1px solid rgba(60,142,255,0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px; font-weight: 600; color: var(--blue);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .link-btn:hover { background: rgba(60,142,255,0.18); border-color: rgba(60,142,255,0.4); }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--dim);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    color: #c0c0d8;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block .key { color: #3C8EFF; }
+  .code-block .val { color: #00E5A0; }
+  .code-block .comment { color: #5a5a7a; }
+
+  /* CREDENTIAL INPUTS */
+  .cred-grid { display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
+  .cred-field label {
+    display: block; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .cred-field input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px; font-family: 'Courier New', monospace;
+    color: var(--text);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .cred-field input:focus { border-color: rgba(255,122,0,0.4); }
+  .cred-field input::placeholder { color: var(--muted); }
+
+  /* WARNING */
+  .warning {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: rgba(255,211,61,0.06);
+    border: 1px solid rgba(255,211,61,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .warning-icon { font-size: 15px; line-height: 1.5; }
+  .warning p { color: #c8b848; line-height: 1.5; }
+
+  .info-box {
+    display: flex; gap: 10px; align-items: flex-start;
+    background: rgba(60,142,255,0.06);
+    border: 1px solid rgba(60,142,255,0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .info-icon { font-size: 15px; line-height: 1.5; }
+  .info-box p { color: #7ab0f0; line-height: 1.5; }
+
+  /* PERMISSION TAGS */
+  .perm-grid { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 4px; }
+  .perm-tag {
+    background: rgba(60,142,255,0.08);
+    border: 1px solid rgba(60,142,255,0.2);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; color: #7ab0f0;
+  }
+
+  /* NEXT PHASE */
+  .next-phase {
+    margin-top: 48px;
+    background: linear-gradient(135deg, rgba(255,60,60,0.06), rgba(255,122,0,0.06));
+    border: 1px solid rgba(255,122,0,0.2);
+    border-radius: 14px;
+    padding: 28px 28px;
+  }
+  .next-phase-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--accent2);
+    margin-bottom: 8px;
+  }
+  .next-phase h3 {
+    font-size: 20px; font-weight: 700; letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .next-phase p { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .next-phase .preview-code {
+    background: var(--dim);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px; color: #8888aa;
+    opacity: 0.6;
+  }
+
+  /* COMPLETE BANNER */
+  .complete-banner {
+    display: none;
+    margin-top: 32px;
+    background: rgba(0,229,160,0.07);
+    border: 1px solid rgba(0,229,160,0.25);
+    border-radius: 14px;
+    padding: 24px 28px;
+    text-align: center;
+  }
+  .complete-banner.visible { display: block; }
+  .complete-banner h3 {
+    font-size: 22px; font-weight: 700;
+    color: var(--green); margin-bottom: 8px;
+  }
+  .complete-banner p { font-size: 14px; color: var(--muted); }
+
+  /* SAVE BUTTON */
+  .save-btn {
+    display: block; width: 100%;
+    margin-top: 12px;
+    background: linear-gradient(135deg, #FF3C3C, #FF7A00);
+    border: none; border-radius: 10px;
+    padding: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; color: #fff;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .save-btn:hover { opacity: 0.9; }
+
+  .divider { height: 1px; background: var(--border); margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Raio⚡</div>
+  <div class="phase-badge">Fase 0 — Setup Meta App</div>
+</nav>
+
+<div class="container">
+
+  <div class="header">
+    <div class="phase-label">⚡ Próximo passo</div>
+    <h1>Configure seu <span>App Meta</span></h1>
+    <p>Sem isso, nada do resto funciona. Complete os 6 passos abaixo — leva 1 a 2 horas no total.</p>
+  </div>
+
+  <div class="progress-block">
+    <div class="progress-top">
+      <span class="progress-label">Progresso</span>
+      <span class="progress-count"><span id="done-count">0</span> / 6 concluídos</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="steps" id="steps">
+
+    <!-- STEP 1 -->
+    <div class="step" id="step-1">
+      <div class="step-header" onclick="toggleStep('step-1')">
+        <div class="step-checkbox" id="check-step-1" onclick="toggleCheck(event, 'step-1')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 1</div>
+          <div class="step-title">Criar conta de desenvolvedor Meta</div>
+          <div class="step-subtitle">Acesse developers.facebook.com com sua conta Facebook</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span>Acesse o link abaixo com a sua conta Facebook pessoal (precisa ser a conta vinculada ao seu Business Manager)</span></li>
+          <li><span class="dot">2</span><span>Clique em <strong>"Get Started"</strong> se for a primeira vez, ou confirme que já tem acesso de desenvolvedor ativo</span></li>
+          <li><span class="dot">3</span><span>Aceite os Termos de Serviço da plataforma Meta for Developers</span></li>
+        </ul>
+        <a href="https://developers.facebook.com" target="_blank" class="link-btn">
+          ↗ Abrir developers.facebook.com
+        </a>
+        <div class="info-box">
+          <span class="info-icon">ℹ</span>
+          <p>Se você já usa o Meta Business Suite no dia a dia, a conta de desenvolvedor usa o mesmo login. Não cria uma conta separada.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="step-2">
+      <div class="step-header" onclick="toggleStep('step-2')">
+        <div class="step-checkbox" id="check-step-2" onclick="toggleCheck(event, 'step-2')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 2</div>
+          <div class="step-title">Criar o App Meta (tipo Business)</div>
+          <div class="step-subtitle">Um único app para todos os clientes do Raio</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span>No painel do desenvolvedor, clique em <strong>"My Apps"</strong> → <strong>"Create App"</strong></span></li>
+          <li><span class="dot">2</span><span>Selecione o tipo: <strong>"Business"</strong> (não "Consumer" ou "Gaming")</span></li>
+          <li><span class="dot">3</span><span>Preencha o nome do app: <strong>"Raio"</strong> (ou qualquer nome — pode mudar depois)</span></li>
+          <li><span class="dot">4</span><span>Informe seu e-mail de contato e selecione seu Business Portfolio (Business Manager)</span></li>
+          <li><span class="dot">5</span><span>Clique em <strong>"Create App"</strong></span></li>
+        </ul>
+        <div class="warning">
+          <span class="warning-icon">⚠</span>
+          <p>Selecione tipo <strong>Business</strong> obrigatoriamente. O tipo errado impede o acesso às APIs do Instagram e WhatsApp.</p>
+        </div>
+        <div class="info-box">
+          <span class="info-icon">ℹ</span>
+          <p>Você <strong>não</strong> cria um app por cliente. Este único app vai atender todos os clientes do Raio via OAuth.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="step-3">
+      <div class="step-header" onclick="toggleStep('step-3')">
+        <div class="step-checkbox" id="check-step-3" onclick="toggleCheck(event, 'step-3')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 3</div>
+          <div class="step-title">Adicionar produtos ao app</div>
+          <div class="step-subtitle">Instagram + WhatsApp — ambos são obrigatórios</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span>Dentro do app criado, vá em <strong>"Add Products"</strong> no menu lateral</span></li>
+          <li><span class="dot">2</span><span>Clique em <strong>"Set Up"</strong> ao lado de <strong>Instagram</strong></span></li>
+          <li><span class="dot">3</span><span>Clique em <strong>"Set Up"</strong> ao lado de <strong>WhatsApp</strong></span></li>
+          <li><span class="dot">4</span><span>Confirme que ambos aparecem no menu lateral esquerdo do app</span></li>
+        </ul>
+        <div style="padding-top: 8px;">
+          <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px;">Permissões que você vai precisar (configurar depois)</div>
+          <div class="perm-grid">
+            <span class="perm-tag">instagram_manage_messages</span>
+            <span class="perm-tag">instagram_basic</span>
+            <span class="perm-tag">instagram_manage_insights</span>
+            <span class="perm-tag">whatsapp_business_messaging</span>
+            <span class="perm-tag">whatsapp_business_management</span>
+            <span class="perm-tag">ads_read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="step-4">
+      <div class="step-header" onclick="toggleStep('step-4')">
+        <div class="step-checkbox" id="check-step-4" onclick="toggleCheck(event, 'step-4')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 4</div>
+          <div class="step-title">Configurar conta de teste do Instagram Business</div>
+          <div class="step-subtitle">Necessário para testar o webhook antes de ir para produção</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span>No menu do app, vá em <strong>Instagram → Basic Display → Create New Test User</strong></span></li>
+          <li><span class="dot">2</span><span><strong>Ou:</strong> conecte sua conta Instagram Business real em <strong>Instagram → API Setup</strong> clicando em "Add Instagram Test Account"</span></li>
+          <li><span class="dot">3</span><span>A conta Instagram precisa ser do tipo <strong>Business ou Creator</strong> (não conta pessoal)</span></li>
+          <li><span class="dot">4</span><span>Autorize o app a acessar a conta quando solicitado</span></li>
+        </ul>
+        <div class="info-box">
+          <span class="info-icon">ℹ</span>
+          <p>Em modo desenvolvimento, o app só funciona com até <strong>5 contas de teste</strong>. Para contas de terceiros (clientes do Raio), você precisará submeter o app para revisão da Meta — isso vem na Fase 7.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="step-5">
+      <div class="step-header" onclick="toggleStep('step-5')">
+        <div class="step-checkbox" id="check-step-5" onclick="toggleCheck(event, 'step-5')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 5</div>
+          <div class="step-title">Configurar número de teste do WhatsApp Business</div>
+          <div class="step-subtitle">A Meta fornece um número gratuito para desenvolvimento</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span>No menu do app, vá em <strong>WhatsApp → API Setup</strong></span></li>
+          <li><span class="dot">2</span><span>A Meta já cria automaticamente um <strong>número de teste gratuito</strong> — você vai ver ele na seção "From"</span></li>
+          <li><span class="dot">3</span><span>Em <strong>"To"</strong>, adicione seu número pessoal como destinatário de teste (pode enviar até 5 números para teste gratuito)</span></li>
+          <li><span class="dot">4</span><span>Clique em <strong>"Send Message"</strong> para verificar que o número está funcionando</span></li>
+          <li><span class="dot">5</span><span>Anote o <strong>Phone Number ID</strong> e o <strong>WhatsApp Business Account ID (WABA ID)</strong> que aparecem nessa tela</span></li>
+        </ul>
+        <div class="warning">
+          <span class="warning-icon">⚠</span>
+          <p>O número de teste tem limite de envios. Para produção você vai precisar conectar um número real via <a href="https://business.whatsapp.com" target="_blank" style="color: inherit;">WhatsApp Business Platform</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step" id="step-6">
+      <div class="step-header" onclick="toggleStep('step-6')">
+        <div class="step-checkbox" id="check-step-6" onclick="toggleCheck(event, 'step-6')"></div>
+        <div class="step-main">
+          <div class="step-number">Passo 6</div>
+          <div class="step-title">Anotar as credenciais</div>
+          <div class="step-subtitle">Você vai precisar delas para cada linha de código daqui para frente</div>
+        </div>
+        <div class="step-toggle">▾</div>
+      </div>
+      <div class="step-body">
+        <ul class="instruction-list">
+          <li><span class="dot">1</span><span><strong>App ID</strong> e <strong>App Secret</strong> → Menu do app → Settings → Basic</span></li>
+          <li><span class="dot">2</span><span><strong>Phone Number ID</strong> → WhatsApp → API Setup → campo "Phone number ID"</span></li>
+          <li><span class="dot">3</span><span><strong>WABA ID</strong> → WhatsApp → API Setup → campo "WhatsApp Business Account ID"</span></li>
+        </ul>
+        <div class="cred-grid">
+          <div class="cred-field">
+            <label>App ID</label>
+            <input type="text" id="cred-app-id" placeholder="1234567890" />
+          </div>
+          <div class="cred-field">
+            <label>App Secret</label>
+            <input type="password" id="cred-app-secret" placeholder="••••••••••••••••••••••••••••••••" />
+          </div>
+          <div class="cred-field">
+            <label>Phone Number ID (WhatsApp)</label>
+            <input type="text" id="cred-phone-id" placeholder="109876543210987" />
+          </div>
+          <div class="cred-field">
+            <label>WABA ID (WhatsApp Business Account ID)</label>
+            <input type="text" id="cred-waba-id" placeholder="123456789012345" />
+          </div>
+        </div>
+        <button class="save-btn" onclick="saveCredentials()">Salvar credenciais no navegador</button>
+        <div id="save-confirm" style="display:none; text-align:center; font-size:13px; color: var(--green); margin-top: 8px;">
+          ✓ Salvo localmente (só no seu navegador)
+        </div>
+        <div class="warning" style="margin-top: 12px;">
+          <span class="warning-icon">⚠</span>
+          <p>Nunca commite o App Secret no Git. Sempre use variáveis de ambiente (<code style="background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px;">.env</code> + <code style="background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px;">.gitignore</code>).</p>
+        </div>
+        <div class="code-block" style="margin-top:4px;">
+          <span class="comment"># .env — nunca commitar este arquivo</span><br>
+          <span class="key">META_APP_ID</span>=<span class="val">seu_app_id_aqui</span><br>
+          <span class="key">META_APP_SECRET</span>=<span class="val">seu_app_secret_aqui</span><br>
+          <span class="key">WA_PHONE_NUMBER_ID</span>=<span class="val">seu_phone_number_id</span><br>
+          <span class="key">WA_WABA_ID</span>=<span class="val">seu_waba_id</span><br>
+          <span class="key">VERIFY_TOKEN</span>=<span class="val">qualquer_string_secreta_sua</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- COMPLETE BANNER -->
+  <div class="complete-banner" id="complete-banner">
+    <h3>Fase 0 concluída</h3>
+    <p>App Meta configurado. Você está pronto para a Fase 1 — escrever o primeiro webhook.</p>
+  </div>
+
+  <!-- NEXT PHASE PREVIEW -->
+  <div class="next-phase">
+    <div class="next-phase-label">A seguir — Fase 1</div>
+    <h3>Primeiro Webhook</h3>
+    <p>Com o app configurado, você vai subir um servidor Node.js em menos de 30 linhas e receber a primeira DM em tempo real no console.</p>
+    <div class="preview-code">
+npm init -y && npm install express dotenv<br><br>
+<span style="color:#5a5a7a"># server.js rodando em localhost:3000</span><br>
+app.get('/webhook', verify_token_check);<br>
+app.post('/webhook', (req, res) => {<br>
+&nbsp;&nbsp;console.log('DM recebida:', req.body);<br>
+&nbsp;&nbsp;res.sendStatus(200);<br>
+});
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  const TOTAL = 6;
+
+  function updateProgress() {
+    let done = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      if (document.getElementById(`check-step-${i}`).classList.contains('checked')) done++;
+    }
+    document.getElementById('done-count').textContent = done;
+    document.getElementById('progress-fill').style.width = `${(done / TOTAL) * 100}%`;
+
+    const banner = document.getElementById('complete-banner');
+    if (done === TOTAL) banner.classList.add('visible');
+    else banner.classList.remove('visible');
+
+    saveState();
+  }
+
+  function toggleCheck(event, stepId) {
+    event.stopPropagation();
+    const check = document.getElementById(`check-${stepId}`);
+    const step = document.getElementById(stepId);
+    check.classList.toggle('checked');
+    step.classList.toggle('done');
+    updateProgress();
+  }
+
+  function toggleStep(stepId) {
+    const step = document.getElementById(stepId);
+    const isOpen = step.classList.contains('open');
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('open', 'active'));
+    if (!isOpen) {
+      step.classList.add('open', 'active');
+    }
+  }
+
+  function saveCredentials() {
+    const fields = ['app-id', 'app-secret', 'phone-id', 'waba-id'];
+    fields.forEach(f => {
+      const val = document.getElementById(`cred-${f}`).value;
+      if (val) localStorage.setItem(`raio_cred_${f}`, val);
+    });
+    document.getElementById('save-confirm').style.display = 'block';
+    setTimeout(() => document.getElementById('save-confirm').style.display = 'none', 3000);
+  }
+
+  function saveState() {
+    const state = {};
+    for (let i = 1; i <= TOTAL; i++) {
+      state[`step-${i}`] = document.getElementById(`check-step-${i}`).classList.contains('checked');
+    }
+    localStorage.setItem('raio_fase0_state', JSON.stringify(state));
+  }
+
+  function loadState() {
+    const raw = localStorage.getItem('raio_fase0_state');
+    if (raw) {
+      const state = JSON.parse(raw);
+      for (let i = 1; i <= TOTAL; i++) {
+        if (state[`step-${i}`]) {
+          document.getElementById(`check-step-${i}`).classList.add('checked');
+          document.getElementById(`step-${i}`).classList.add('done');
+        }
+      }
+    }
+    const fields = ['app-id', 'app-secret', 'phone-id', 'waba-id'];
+    fields.forEach(f => {
+      const val = localStorage.getItem(`raio_cred_${f}`);
+      if (val) document.getElementById(`cred-${f}`).value = val;
+    });
+    updateProgress();
+  }
+
+  // Auto-open first incomplete step on load
+  function openFirstIncomplete() {
+    for (let i = 1; i <= TOTAL; i++) {
+      const check = document.getElementById(`check-step-${i}`);
+      if (!check.classList.contains('checked')) {
+        toggleStep(`step-${i}`);
+        break;
+      }
+    }
+  }
+
+  loadState();
+  openFirstIncomplete();
+</script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raio — Como funciona</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e0e0e0; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; background: #0a0a0aee; backdrop-filter: blur(10px); border-bottom: 1px solid #1e1e1e; padding: 14px 40px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+    nav .logo { font-weight: 800; font-size: 18px; color: #fff; }
+    nav .logo span { color: #f59e0b; }
+    nav .nav-links { display: flex; gap: 24px; margin-left: 40px; }
+    nav .nav-links a { font-size: 13px; color: #666; text-decoration: none; cursor: pointer; }
+    nav .nav-links a:hover { color: #fff; }
+
+    /* HERO */
+    .hero { padding: 80px 40px 60px; max-width: 900px; margin: 0 auto; }
+    .hero h1 { font-size: 42px; font-weight: 800; line-height: 1.2; color: #fff; margin-bottom: 16px; }
+    .hero h1 span { color: #f59e0b; }
+    .hero p { font-size: 17px; color: #888; line-height: 1.7; max-width: 600px; }
+
+    /* SECTION */
+    section { padding: 64px 40px; max-width: 900px; margin: 0 auto; border-top: 1px solid #1a1a1a; }
+    .section-tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #f59e0b; margin-bottom: 12px; }
+    .section-title { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .section-desc { font-size: 15px; color: #666; margin-bottom: 40px; line-height: 1.6; }
+
+    /* FLOW STEPS */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; gap: 20px; align-items: flex-start; }
+    .step-left { display: flex; flex-direction: column; align-items: center; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: #1e1e1e; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #f59e0b; flex-shrink: 0; }
+    .step-line { width: 1px; background: #222; flex: 1; min-height: 40px; }
+    .step-body { padding-bottom: 36px; flex: 1; padding-top: 4px; }
+    .step-body h3 { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .step-body p { font-size: 13px; color: #666; line-height: 1.6; }
+
+    /* MOCKUP SCREENS */
+    .screens-flow { display: flex; align-items: center; gap: 0; overflow-x: auto; padding-bottom: 16px; }
+    .screen-wrap { display: flex; align-items: center; gap: 0; flex-shrink: 0; }
+    .arrow { font-size: 20px; color: #333; padding: 0 16px; flex-shrink: 0; }
+
+    .screen { width: 200px; border-radius: 12px; border: 1px solid #2a2a2a; background: #141414; overflow: hidden; flex-shrink: 0; }
+    .screen-bar { background: #1e1e1e; padding: 8px 12px; display: flex; align-items: center; gap: 6px; }
+    .screen-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .screen-title { font-size: 10px; color: #555; margin-left: 4px; }
+    .screen-body { padding: 16px; }
+
+    /* Login screen */
+    .mock-logo { font-size: 18px; font-weight: 800; text-align: center; margin-bottom: 16px; color: #fff; }
+    .mock-logo span { color: #f59e0b; }
+    .mock-input { background: #1e1e1e; border: 1px solid #333; border-radius: 6px; padding: 7px 10px; font-size: 11px; color: #888; margin-bottom: 8px; width: 100%; }
+    .mock-btn { width: 100%; padding: 8px; border-radius: 6px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; margin-bottom: 6px; }
+    .mock-btn.primary { background: #f59e0b; color: #000; }
+    .mock-btn.ig { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: #fff; }
+    .mock-btn.outline { background: transparent; border: 1px solid #333; color: #888; }
+    .mock-divider { text-align: center; font-size: 10px; color: #444; margin: 8px 0; }
+
+    /* Dashboard screen */
+    .mock-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .mock-topbar span { font-size: 11px; font-weight: 700; color: #fff; }
+    .mock-badge { font-size: 9px; background: #1a3a1a; color: #34d399; padding: 2px 6px; border-radius: 10px; }
+    .mock-stat { background: #1e1e1e; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; }
+    .mock-stat-label { font-size: 9px; color: #555; }
+    .mock-stat-val { font-size: 16px; font-weight: 700; color: #fff; }
+    .mock-stat-sub { font-size: 9px; color: #34d399; }
+
+    /* Lead card */
+    .mock-lead { background: #1e1e1e; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; border-left: 2px solid #f59e0b; }
+    .mock-lead-name { font-size: 11px; font-weight: 600; color: #fff; }
+    .mock-lead-origin { font-size: 9px; color: #888; margin-top: 2px; }
+    .mock-lead-tags { display: flex; gap: 4px; margin-top: 6px; }
+    .mock-tag { font-size: 9px; padding: 2px 6px; border-radius: 10px; }
+    .mock-tag.green { background: #052e16; color: #34d399; }
+    .mock-tag.yellow { background: #451a03; color: #f59e0b; }
+    .mock-tag.blue { background: #0c1a3a; color: #60a5fa; }
+    .mock-lead.hot { border-left-color: #ef4444; }
+    .mock-lead.hot .mock-lead-name { color: #fca5a5; }
+
+    /* Connect screen */
+    .mock-connect-title { font-size: 13px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 4px; }
+    .mock-connect-sub { font-size: 10px; color: #666; text-align: center; margin-bottom: 16px; line-height: 1.4; }
+    .mock-perms { background: #1e1e1e; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; }
+    .mock-perm { display: flex; align-items: center; gap: 6px; font-size: 10px; color: #888; margin-bottom: 4px; }
+    .mock-perm:last-child { margin-bottom: 0; }
+    .mock-check { width: 12px; height: 12px; border-radius: 50%; background: #34d399; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #000; flex-shrink: 0; }
+
+    /* Webhook diagram */
+    .webhook-diagram { background: #111; border: 1px solid #222; border-radius: 16px; padding: 32px; }
+    .wh-clients { display: flex; flex-direction: column; gap: 10px; }
+    .wh-client { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+    .wh-client-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .wh-client-info strong { display: block; font-size: 12px; color: #fff; }
+    .wh-client-info span { font-size: 11px; color: #555; }
+    .wh-arrow-row { display: flex; align-items: center; gap: 0; margin: 24px 0; }
+    .wh-lines { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .wh-line { height: 1px; background: linear-gradient(to right, #333, #f59e0b44); position: relative; }
+    .wh-line::after { content: ''; position: absolute; right: 0; top: -3px; border: 3px solid transparent; border-left: 6px solid #f59e0b44; }
+    .wh-center { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; padding: 0 24px; }
+    .wh-server { background: #1e1e1e; border: 1px solid #f59e0b44; border-radius: 10px; padding: 12px 20px; text-align: center; }
+    .wh-server-title { font-size: 12px; font-weight: 700; color: #f59e0b; }
+    .wh-server-url { font-size: 10px; color: #555; font-family: monospace; margin-top: 2px; }
+    .wh-right { display: flex; flex-direction: column; gap: 10px; }
+    .wh-output { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 14px; }
+    .wh-output strong { display: block; font-size: 11px; color: #fff; margin-bottom: 2px; }
+    .wh-output span { font-size: 10px; color: #555; }
+    .wh-db { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 14px; }
+    .wh-db strong { display: block; font-size: 11px; color: #fff; margin-bottom: 2px; }
+    .wh-db span { font-size: 10px; color: #555; }
+    .diagram-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; }
+    .diagram-arrows { display: flex; flex-direction: column; gap: 22px; padding: 0 8px; }
+    .diagram-arrow { font-size: 18px; color: #f59e0b44; text-align: center; }
+
+    /* Token box */
+    .token-flow { background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; }
+    .token-step { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+    .token-step:last-child { margin-bottom: 0; }
+    .token-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .token-icon.orange { background: #451a03; }
+    .token-icon.blue { background: #0c1a3a; }
+    .token-icon.green { background: #052e16; }
+    .token-icon.purple { background: #2e1065; }
+    .token-text strong { display: block; font-size: 14px; color: #fff; margin-bottom: 2px; }
+    .token-text span { font-size: 12px; color: #666; line-height: 1.5; }
+    .token-text code { background: #1e1e1e; padding: 1px 6px; border-radius: 4px; font-size: 11px; color: #60a5fa; font-family: monospace; }
+    .token-connector { width: 1px; height: 16px; background: #222; margin-left: 17px; }
+
+    /* Status */
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+    .status-card { background: #141414; border: 1px solid #222; border-radius: 10px; padding: 16px; }
+    .status-card.done { border-color: #34d39933; }
+    .status-card.next { border-color: #f59e0b33; }
+    .status-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+    .status-badge.done { background: #052e16; color: #34d399; }
+    .status-badge.next { background: #451a03; color: #f59e0b; }
+    .status-badge.soon { background: #1e1e1e; color: #666; }
+    .status-card h4 { font-size: 14px; color: #fff; margin-bottom: 4px; }
+    .status-card p { font-size: 12px; color: #555; line-height: 1.5; }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .hero { padding: 48px 20px 40px; }
+      .hero h1 { font-size: 28px; }
+      section { padding: 48px 20px; }
+      nav { padding: 14px 20px; }
+      .screens-flow { gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Raio<span>⚡</span></div>
+    <div class="nav-links">
+      <a onclick="document.getElementById('fluxo').scrollIntoView({behavior:'smooth'})">Fluxo</a>
+      <a onclick="document.getElementById('telas').scrollIntoView({behavior:'smooth'})">Telas</a>
+      <a onclick="document.getElementById('webhook').scrollIntoView({behavior:'smooth'})">Webhook</a>
+      <a onclick="document.getElementById('status').scrollIntoView({behavior:'smooth'})">Status</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Do login ao <span>lead rastreado</span></h1>
+    <p>Como o app Meta, o servidor e o modelo SaaS se conectam — da tela de cadastro até a DM chegando com origem e intenção classificadas.</p>
+  </div>
+
+  <!-- FLUXO DO CLIENTE -->
+  <section id="fluxo">
+    <div class="section-tag">Jornada do cliente</div>
+    <div class="section-title">Como um novo cliente conecta o Instagram</div>
+    <div class="section-desc">Do primeiro acesso à plataforma até o webhook escutando as DMs dele automaticamente.</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <h3>Cliente cria conta no Raio</h3>
+          <p>E-mail e senha. Nenhuma configuração técnica necessária — o Raio cuida de tudo nos bastidores.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <h3>Clica em "Conectar Instagram"</h3>
+          <p>O Raio redireciona para a tela de autorização da Meta. O cliente não vê código, não vê API — só uma tela familiar do Instagram/Facebook.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <h3>Cliente autoriza as permissões</h3>
+          <p>A Meta mostra quais permissões o app vai usar: ler mensagens, ver insights. O cliente clica em "Permitir".</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <h3>Meta redireciona para <code style="background:#1e1e1e;padding:2px 6px;border-radius:4px;font-size:12px;color:#60a5fa">/auth/callback</code></h3>
+          <p>O servidor recebe um código temporário, troca por um token de acesso permanente, e salva no banco vinculado à conta do cliente.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-left"><div class="step-num">5</div></div>
+        <div class="step-body">
+          <h3>Dashboard ativo — DMs chegando em tempo real</h3>
+          <p>A partir desse momento, toda DM recebida no Instagram do cliente dispara o webhook e aparece no painel com origem, intenção e urgência.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELAS -->
+  <section id="telas">
+    <div class="section-tag">Protótipo de telas</div>
+    <div class="section-title">Da tela de login ao painel</div>
+    <div class="section-desc">Cada tela que o cliente vê durante o onboarding.</div>
+
+    <div class="screens-flow">
+
+      <!-- Login -->
+      <div class="screen-wrap">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="screen-dot" style="background:#ef4444"></div>
+            <div class="screen-dot" style="background:#f59e0b"></div>
+            <div class="screen-dot" style="background:#22c55e"></div>
+            <span class="screen-title">app.raio.com/login</span>
+          </div>
+          <div class="screen-body">
+            <div class="mock-logo">Raio<span style="color:#f59e0b">⚡</span></div>
+            <div class="mock-input">E-mail</div>
+            <div class="mock-input">Senha</div>
+            <button class="mock-btn primary">Entrar</button>
+            <div class="mock-divider">ou</div>
+            <button class="mock-btn outline">Criar conta grátis</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- Conectar -->
+      <div class="screen-wrap">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="screen-dot" style="background:#ef4444"></div>
+            <div class="screen-dot" style="background:#f59e0b"></div>
+            <div class="screen-dot" style="background:#22c55e"></div>
+            <span class="screen-title">app.raio.com/setup</span>
+          </div>
+          <div class="screen-body">
+            <div class="mock-connect-title">Conecte seu Instagram</div>
+            <div class="mock-connect-sub">Para começar a rastrear suas DMs e vendas</div>
+            <button class="mock-btn ig">📸 Conectar Instagram</button>
+            <div class="mock-divider">o que você autoriza</div>
+            <div class="mock-perms">
+              <div class="mock-perm"><div class="mock-check">✓</div>Ler mensagens recebidas</div>
+              <div class="mock-perm"><div class="mock-check">✓</div>Ver métricas de posts</div>
+              <div class="mock-perm"><div class="mock-check">✓</div>Dados de anúncios</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- Meta OAuth -->
+      <div class="screen-wrap">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="screen-dot" style="background:#ef4444"></div>
+            <div class="screen-dot" style="background:#f59e0b"></div>
+            <div class="screen-dot" style="background:#22c55e"></div>
+            <span class="screen-title">facebook.com/dialog</span>
+          </div>
+          <div class="screen-body">
+            <div style="text-align:center;margin-bottom:12px">
+              <div style="font-size:22px;margin-bottom:4px">f</div>
+              <div style="font-size:11px;color:#fff;font-weight:700">Raio quer acesso</div>
+              <div style="font-size:10px;color:#888;margin-top:2px">à sua conta do Instagram</div>
+            </div>
+            <div style="background:#1e1e1e;border-radius:6px;padding:8px 10px;margin-bottom:10px">
+              <div style="font-size:9px;color:#666;margin-bottom:4px">Conta selecionada</div>
+              <div style="font-size:11px;color:#fff">@seuperfil</div>
+            </div>
+            <button class="mock-btn primary" style="margin-bottom:6px">Permitir</button>
+            <button class="mock-btn outline">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- Dashboard -->
+      <div class="screen-wrap">
+        <div class="screen">
+          <div class="screen-bar">
+            <div class="screen-dot" style="background:#ef4444"></div>
+            <div class="screen-dot" style="background:#f59e0b"></div>
+            <div class="screen-dot" style="background:#22c55e"></div>
+            <span class="screen-title">app.raio.com</span>
+          </div>
+          <div class="screen-body">
+            <div class="mock-topbar">
+              <span>Dashboard</span>
+              <span class="mock-badge">● ao vivo</span>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-label">DMs hoje</div>
+              <div class="mock-stat-val">24</div>
+              <div class="mock-stat-sub">↑ 8 de anúncios</div>
+            </div>
+            <div class="mock-lead">
+              <div class="mock-lead-name">@mariana.fit</div>
+              <div class="mock-lead-origin">📢 Anúncio · Transformação 90d</div>
+              <div class="mock-lead-tags">
+                <span class="mock-tag green">interesse</span>
+                <span class="mock-tag yellow">urgência alta</span>
+              </div>
+            </div>
+            <div class="mock-lead hot">
+              <div class="mock-lead-name">@coach.pedro</div>
+              <div class="mock-lead-origin">🎬 Reels orgânico</div>
+              <div class="mock-lead-tags">
+                <span class="mock-tag blue">dúvida</span>
+                <span class="mock-tag green">média</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WEBHOOK MULTI-CLIENTE -->
+  <section id="webhook">
+    <div class="section-tag">Arquitetura SaaS</div>
+    <div class="section-title">Um webhook, todos os clientes</div>
+    <div class="section-desc">O webhook é configurado uma única vez no app Meta. Quando qualquer cliente conecta a conta via OAuth, a Meta automaticamente começa a mandar as DMs dele para o mesmo endpoint.</div>
+
+    <div class="webhook-diagram">
+      <div class="diagram-row">
+
+        <!-- Clientes -->
+        <div class="wh-clients">
+          <div style="font-size:11px;color:#555;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Clientes conectados</div>
+          <div class="wh-client">
+            <div class="wh-client-avatar" style="background:#451a03;color:#f59e0b">A</div>
+            <div class="wh-client-info"><strong>@personal.ana</strong><span>token salvo no banco</span></div>
+          </div>
+          <div class="wh-client">
+            <div class="wh-client-avatar" style="background:#0c1a3a;color:#60a5fa">B</div>
+            <div class="wh-client-info"><strong>@nutri.marcos</strong><span>token salvo no banco</span></div>
+          </div>
+          <div class="wh-client">
+            <div class="wh-client-avatar" style="background:#052e16;color:#34d399">C</div>
+            <div class="wh-client-info"><strong>@coach.julia</strong><span>token salvo no banco</span></div>
+          </div>
+        </div>
+
+        <!-- Arrows -->
+        <div class="diagram-arrows">
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-arrow">→</div>
+          <div class="diagram-arrow">→</div>
+        </div>
+
+        <!-- Servidor -->
+        <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+          <div style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;text-align:center">Servidor Raio</div>
+          <div class="wh-server" style="width:100%">
+            <div class="wh-server-title">POST /webhook</div>
+            <div class="wh-server-url">raio.com/webhook</div>
+          </div>
+          <div style="font-size:11px;color:#555;text-align:center;line-height:1.5">Lê <code style="background:#1e1e1e;padding:1px 5px;border-radius:3px;font-size:10px;color:#60a5fa">recipient.id</code><br>e roteia pro cliente certo</div>
+          <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+            <div class="wh-output">
+              <strong>💾 Salva lead</strong>
+              <span>origem, intenção, urgência</span>
+            </div>
+            <div class="wh-output">
+              <strong>🤖 Claude classifica</strong>
+              <span>interesse · dúvida · suporte</span>
+            </div>
+            <div class="wh-output">
+              <strong>📊 Painel atualiza</strong>
+              <span>tempo real por cliente</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO O TOKEN FUNCIONA -->
+  <section>
+    <div class="section-tag">Autorização</div>
+    <div class="section-title">O que acontece quando o cliente clica em "Permitir"</div>
+    <div class="section-desc">O fluxo técnico do OAuth em linguagem simples.</div>
+
+    <div class="token-flow">
+      <div class="token-step">
+        <div class="token-icon orange">🔗</div>
+        <div class="token-text">
+          <strong>Raio redireciona o cliente para a Meta</strong>
+          <span>Com o App ID do seu app. A Meta sabe que é o Raio pedindo acesso.</span>
+        </div>
+      </div>
+      <div class="token-connector"></div>
+      <div class="token-step">
+        <div class="token-icon blue">✅</div>
+        <div class="token-text">
+          <strong>Cliente clica em "Permitir" na tela da Meta</strong>
+          <span>A Meta gera um código temporário (válido por minutos).</span>
+        </div>
+      </div>
+      <div class="token-connector"></div>
+      <div class="token-step">
+        <div class="token-icon green">🔄</div>
+        <div class="token-text">
+          <strong>Meta chama <code>/auth/callback?code=XXXXX</code></strong>
+          <span>Seu servidor recebe o código e troca por um <strong>token de acesso</strong> real chamando a API da Meta.</span>
+        </div>
+      </div>
+      <div class="token-connector"></div>
+      <div class="token-step">
+        <div class="token-icon purple">💾</div>
+        <div class="token-text">
+          <strong>Token salvo no banco vinculado ao cliente</strong>
+          <span>A partir de agora, o webhook recebe as DMs dessa conta e o servidor sabe a quem pertencem pelo <code>recipient.id</code>.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section id="status">
+    <div class="section-tag">Roadmap</div>
+    <div class="section-title">Onde estamos</div>
+    <div class="section-desc">Fase 1 concluída. Próximo passo: banco de dados e primeiro lead real salvo.</div>
+
+    <div class="status-grid">
+      <div class="status-card done">
+        <span class="status-badge done">✓ Feito</span>
+        <h4>App Meta configurado</h4>
+        <p>App criado, Instagram conectado, use case configurado.</p>
+      </div>
+      <div class="status-card done">
+        <span class="status-badge done">✓ Feito</span>
+        <h4>Servidor Go + webhook</h4>
+        <p>Echo rodando, <code style="font-size:11px;background:#1e1e1e;padding:1px 5px;border-radius:3px;color:#60a5fa">/webhook</code> e <code style="font-size:11px;background:#1e1e1e;padding:1px 5px;border-radius:3px;color:#60a5fa">/auth/callback</code> ativos via ngrok.</p>
+      </div>
+      <div class="status-card next">
+        <span class="status-badge next">→ Próximo</span>
+        <h4>Banco de dados</h4>
+        <p>PostgreSQL — salvar leads com origem, intenção e urgência.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-badge soon">Em breve</span>
+        <h4>Classificação por IA</h4>
+        <p>Claude API classifica cada DM automaticamente em &lt;1s.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-badge soon">Em breve</span>
+        <h4>WhatsApp unificado</h4>
+        <p>Vincular número WA ao perfil Instagram — histórico único.</p>
+      </div>
+      <div class="status-card">
+        <span class="status-badge soon">Em breve</span>
+        <h4>Painel visual</h4>
+        <p>React + dados reais. Protótipo já existe em <code style="font-size:11px;background:#1e1e1e;padding:1px 5px;border-radius:3px;color:#60a5fa">crm-prototype.jsx</code>.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
