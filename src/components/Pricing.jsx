@@ -1,3 +1,5 @@
+import { useScrollReveal } from '../hooks/useScrollReveal'
+
 const plans = [
   {
     name: 'Starter',
@@ -59,18 +61,28 @@ const plans = [
 ]
 
 export default function Pricing() {
+  const headerRef = useScrollReveal()
+  const gridRef   = useScrollReveal()
+
   return (
     <section className="pricing" id="precos">
       <div className="container">
-        <p className="features-label">Preços</p>
-        <h2>Simples. Proporcional ao seu crescimento.</h2>
-        <p className="pricing-sub">
-          Você paga pelo que mede. Se fechar 1 cliente a mais por mês, o Trakt se paga sozinho.
-        </p>
 
-        <div className="pricing-grid">
-          {plans.map((plan) => (
-            <div className={`price-card${plan.featured ? ' price-card-featured' : ''}`} key={plan.name}>
+        <div ref={headerRef} className="reveal">
+          <p className="features-label">Preços</p>
+          <h2>Simples. Proporcional ao seu crescimento.</h2>
+          <p className="pricing-sub">
+            Você paga pelo que mede. Se fechar 1 cliente a mais por mês, o Trakt se paga sozinho.
+          </p>
+        </div>
+
+        <div ref={gridRef} className="pricing-grid">
+          {plans.map((plan, i) => (
+            <div
+              className={`price-card reveal${plan.featured ? ' price-card-featured' : ''}`}
+              key={plan.name}
+              style={{ '--i': i }}
+            >
               {plan.featured && <div className="price-badge">Mais popular</div>}
               <div className="price-name">{plan.name}</div>
               <div className="price-amount">

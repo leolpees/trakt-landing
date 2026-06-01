@@ -1,3 +1,5 @@
+import { useScrollReveal } from '../hooks/useScrollReveal'
+
 const features = [
   {
     icon: '📥',
@@ -22,14 +24,20 @@ const features = [
 ]
 
 export default function Features() {
+  const headerRef  = useScrollReveal()
+  const aiRef      = useScrollReveal()
+  const gridRef    = useScrollReveal()
+
   return (
     <section className="features" id="features">
       <div className="container">
-        <p className="features-label">Funcionalidades</p>
-        <h2>Tudo que você precisa para<br />vender pelo Instagram</h2>
 
-        {/* AI featured card */}
-        <div className="ai-card">
+        <div ref={headerRef} className="reveal">
+          <p className="features-label">Funcionalidades</p>
+          <h2>Tudo que você precisa para<br />vender pelo Instagram</h2>
+        </div>
+
+        <div ref={aiRef} className="ai-card reveal">
           <div className="ai-card-left">
             <span className="ai-badge">✦ Inteligência Artificial</span>
             <h3>A IA classifica cada lead antes de você abrir a mensagem</h3>
@@ -51,7 +59,7 @@ export default function Features() {
                 <span className="ai-demo-title">Classificação em tempo real</span>
                 <span className="ai-demo-live">● Ao vivo</span>
               </div>
-              <div className="ai-demo-item">
+              <div className="ai-demo-item ai-demo-item-1">
                 <div className="ai-demo-avatar" style={{ background: '#dbeafe', color: '#2563eb' }}>MF</div>
                 <div className="ai-demo-info">
                   <div className="ai-demo-name">@mariana.fit</div>
@@ -59,7 +67,7 @@ export default function Features() {
                 </div>
                 <span className="ai-demo-tag tag-interesse">interesse · alta urgência</span>
               </div>
-              <div className="ai-demo-item">
+              <div className="ai-demo-item ai-demo-item-2">
                 <div className="ai-demo-avatar" style={{ background: '#d1fae5', color: '#10b981' }}>CP</div>
                 <div className="ai-demo-info">
                   <div className="ai-demo-name">@coach.pedro</div>
@@ -67,7 +75,7 @@ export default function Features() {
                 </div>
                 <span className="ai-demo-tag tag-duvida">dúvida · média</span>
               </div>
-              <div className="ai-demo-item">
+              <div className="ai-demo-item ai-demo-item-3">
                 <div className="ai-demo-avatar" style={{ background: '#fef3c7', color: '#d97706' }}>JL</div>
                 <div className="ai-demo-info">
                   <div className="ai-demo-name">@juliana.lima</div>
@@ -79,16 +87,16 @@ export default function Features() {
           </div>
         </div>
 
-        {/* Regular feature cards */}
-        <div className="features-grid">
-          {features.map((f) => (
-            <div className="feature-card" key={f.title}>
+        <div ref={gridRef} className="features-grid">
+          {features.map((f, i) => (
+            <div className="feature-card reveal" key={f.title} style={{ '--i': i }}>
               <span className="feature-icon">{f.icon}</span>
               <h3>{f.title}</h3>
               <p>{f.desc}</p>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   )
